@@ -1,11 +1,21 @@
-# fastapi-vite-template
+# osm-3d-viewer
 
-[![CI](https://github.com/joernpreuss/fastapi-vite-template/actions/workflows/ci.yml/badge.svg)](https://github.com/joernpreuss/fastapi-vite-template/actions/workflows/ci.yml)
+[![CI](https://github.com/joernpreuss/osm-3d-viewer/actions/workflows/ci.yml/badge.svg)](https://github.com/joernpreuss/osm-3d-viewer/actions/workflows/ci.yml)
 
-A minimal, production-minded full-stack template: **FastAPI** backend, **Vite + TypeScript** frontend, CI/CD via GitHub Actions, test-driven development, and a one-command start on macOS, Linux, and Windows.
+A 3D city viewer on real OpenStreetMap data: rotate and tilt around extruded
+buildings rendered with [MapLibre GL JS](https://maplibre.org/) on the free
+[OpenFreeMap](https://openfreemap.org/) vector tiles — no API key required.
+The initial view shows Cologne.
+
+Built from [fastapi-vite-template](https://github.com/joernpreuss/fastapi-vite-template):
+**FastAPI** backend, **Vite + TypeScript** frontend, CI/CD via GitHub Actions,
+test-driven development, and a one-command start on macOS, Linux, and Windows.
 
 ## What's inside
 
+- **Map:** MapLibre GL JS with OpenFreeMap basemap, 3D buildings via
+  `fill-extrusion` straight from the vector tiles, rotation and tilt via
+  `bearing`/`pitch`.
 - **Backend:** FastAPI, managed with [uv](https://docs.astral.sh/uv/), linted with ruff, type-checked with mypy, tested with pytest.
 - **Frontend:** Vite + TypeScript (no framework), tested with Vitest.
 - **CI/CD:** GitHub Actions — lint, type-check, test, and build on every push.
@@ -13,7 +23,10 @@ A minimal, production-minded full-stack template: **FastAPI** backend, **Vite + 
 
 ## Live demo
 
-The frontend is deployed to GitHub Pages on every push to `main`: [joernpreuss.github.io/fastapi-vite-template](https://joernpreuss.github.io/fastapi-vite-template/)
+The frontend is deployed to GitHub Pages on every push to `main`: [joernpreuss.github.io/osm-3d-viewer](https://joernpreuss.github.io/osm-3d-viewer/)
+
+The Pages deployment is frontend-only, so the backend status widget honestly
+reports "unreachable" there; the map itself is fully functional.
 
 ## Getting started
 

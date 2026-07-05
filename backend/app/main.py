@@ -7,7 +7,7 @@ DEFAULT_FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist
 
 
 def create_app(frontend_dist: Path = DEFAULT_FRONTEND_DIST) -> FastAPI:
-    app = FastAPI(title="fastapi-vite-template")
+    app = FastAPI(title="osm-3d-viewer")
 
     @app.get("/api/health")
     def health() -> dict[str, str]:

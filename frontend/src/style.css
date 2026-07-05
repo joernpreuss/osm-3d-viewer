@@ -13,15 +13,22 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
   background: light-dark(#eef0f3, #16181b);
   color: CanvasText;
 }
 
-.window {
-  min-width: 22rem;
+#app,
+#map {
+  position: fixed;
+  inset: 0;
+}
+
+.panel {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1;
+  max-width: min(22.5rem, calc(100vw - 2rem));
   border: 1px solid light-dark(#d5d8dd, #33373d);
   border-radius: 12px;
   background: Canvas;
@@ -29,30 +36,44 @@ body {
   overflow: hidden;
 }
 
-.window-header {
+.panel-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.75rem 0;
+}
+
+.panel-header h1 {
+  margin: 0;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.camera-readout {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.hint {
+  margin: 0.35rem 0 0.6rem;
+  padding: 0 0.75rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.panel-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid light-dark(#e3e5e9, #2a2e33);
+  border-top: 1px solid light-dark(#e3e5e9, #2a2e33);
   background: light-dark(#f8f9fa, #1e2125);
   font-size: 0.85rem;
-}
-
-.window-body {
-  padding: 2.25rem 2.5rem;
-  text-align: center;
-}
-
-.window-body h1 {
-  margin: 0 0 0.5rem;
-  font-size: 1.4rem;
-}
-
-.window-body p {
-  margin: 0;
-  opacity: 0.8;
 }
 
 .status {
