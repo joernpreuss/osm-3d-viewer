@@ -23,6 +23,17 @@ body {
   inset: 0;
 }
 
+.map-error {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+  opacity: 0.8;
+}
+
 .panel {
   position: absolute;
   top: 1rem;
