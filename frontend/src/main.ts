@@ -43,6 +43,10 @@ async function fetchBackendStatus(): Promise<BackendStatus> {
 }
 
 function initMap(container: HTMLElement, readout: HTMLElement | null): void {
+  // macOS opens the context menu on mousedown (and treats Ctrl+click as a
+  // right click), which swallows the rotate drag before it starts.
+  container.addEventListener("contextmenu", (e) => e.preventDefault());
+
   const map = new MapLibreMap({
     container,
     style: STYLE_URL,
