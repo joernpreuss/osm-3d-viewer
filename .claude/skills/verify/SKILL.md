@@ -35,6 +35,10 @@ Flows worth driving:
 - Theme select flips `document.documentElement.dataset.theme`.
 - Without the style stub the style fetch fails but the panel must keep
   working (this mirrors offline use).
+- A `contextmenu` event dispatched on the map canvas must end up
+  `defaultPrevented` (macOS opens the menu on mousedown, killing rotate drags).
+- Launched with `--disable-webgl --disable-webgl2`, the app must show the
+  `.map-error` message instead of a blank map, panel still working.
 
 Gotchas: launch Chromium with `--enable-unsafe-swiftshader` for WebGL in
 headless mode; the browser binary lives at `/opt/pw-browsers/chromium` in

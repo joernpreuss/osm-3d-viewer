@@ -47,15 +47,27 @@ function initMap(container: HTMLElement, readout: HTMLElement | null): void {
   // right click), which swallows the rotate drag before it starts.
   container.addEventListener("contextmenu", (e) => e.preventDefault());
 
-  const map = new MapLibreMap({
-    container,
-    style: STYLE_URL,
-    center: COLOGNE_VIEW.center,
-    zoom: COLOGNE_VIEW.zoom,
-    pitch: COLOGNE_VIEW.pitch,
-    bearing: COLOGNE_VIEW.bearing,
-    maxPitch: MAX_PITCH,
-  });
+  let map: MapLibreMap;
+  try {
+    map = new MapLibreMap({
+      container,
+      style: STYLE_URL,
+      center: COLOGNE_VIEW.center,
+      zoom: COLOGNE_VIEW.zoom,
+      pitch: COLOGNE_VIEW.pitch,
+      bearing: COLOGNE_VIEW.bearing,
+      maxPitch: MAX_PITCH,
+    });
+  } catch (error) {
+    container.innerHTML = `
+      <p class="map-error">
+        Could not start the 3D map — this viewer needs WebGL2.<br />
+        Enable graphics acceleration in your browser settings and reload.
+      </p>
+    `;
+    console.error(error);
+    return;
+  }
 
   map.addControl(new NavigationControl({ visualizePitch: true }), "top-right");
 
