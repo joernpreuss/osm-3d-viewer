@@ -1,6 +1,17 @@
+import "maplibre-gl/dist/maplibre-gl.css";
 import "./style.css";
 
+import { Map as MapLibreMap, NavigationControl } from "maplibre-gl";
+
+import { MAX_PITCH, normalizeBearing } from "./camera";
 import { interpretHealthResponse, type BackendStatus } from "./health";
+import {
+  COLOGNE_VIEW,
+  STYLE_URL,
+  buildingExtrusionLayer,
+  firstSymbolLayerId,
+  firstVectorSourceId,
+} from "./map-config";
 import {
   THEME_CHOICES,
   isThemeChoice,
@@ -31,12 +42,59 @@ async function fetchBackendStatus(): Promise<BackendStatus> {
   }
 }
 
+function initMap(container: HTMLElement, readout: HTMLElement | null): void {
+  const map = new MapLibreMap({
+    container,
+    style: STYLE_URL,
+    center: COLOGNE_VIEW.center,
+    zoom: COLOGNE_VIEW.zoom,
+    pitch: COLOGNE_VIEW.pitch,
+    bearing: COLOGNE_VIEW.bearing,
+    maxPitch: MAX_PITCH,
+  });
+
+  map.addControl(new NavigationControl({ visualizePitch: true }), "top-right");
+
+  map.on("load", () => {
+    const style = map.getStyle();
+    // Own the 3D buildings: replace any extrusion layers the style ships.
+    for (const layer of style.layers) {
+      if (layer.type === "fill-extrusion") {
+        map.removeLayer(layer.id);
+      }
+    }
+    const sourceId = firstVectorSourceId(style.sources);
+    if (sourceId) {
+      map.addLayer(
+        buildingExtrusionLayer(sourceId),
+        firstSymbolLayerId(style.layers),
+      );
+    }
+  });
+
+  const updateReadout = (): void => {
+    if (readout) {
+      const bearing = Math.round(normalizeBearing(map.getBearing()));
+      const pitch = Math.round(map.getPitch());
+      readout.textContent = `bearing ${bearing}° · pitch ${pitch}°`;
+    }
+  };
+  map.on("move", updateReadout);
+  updateReadout();
+}
+
 function render(app: HTMLElement): void {
   const choice = storedThemeChoice();
 
   app.innerHTML = `
-    <main class="window">
-      <header class="window-header">
+    <div id="map" aria-label="Rotatable 3D map of Cologne"></div>
+    <aside class="panel">
+      <header class="panel-header">
+        <h1>osm-3d-viewer</h1>
+        <span id="camera-readout" class="camera-readout"></span>
+      </header>
+      <p class="hint">Drag to pan. Right-drag or Ctrl+drag to rotate and tilt.</p>
+      <footer class="panel-footer">
         <span class="status">
           Backend
           <span id="status-dot" class="status-dot"></span>
@@ -51,12 +109,8 @@ function render(app: HTMLElement): void {
             ).join("")}
           </select>
         </label>
-      </header>
-      <div class="window-body">
-        <h1>fastapi-vite-template</h1>
-        <p>FastAPI backend · Vite + TypeScript frontend</p>
-      </div>
-    </main>
+      </footer>
+    </aside>
   `;
 
   const select = app.querySelector<HTMLSelectElement>("#theme-select");
@@ -80,6 +134,14 @@ function render(app: HTMLElement): void {
       label.textContent = status;
     }
   });
+
+  const mapContainer = app.querySelector<HTMLDivElement>("#map");
+  if (mapContainer) {
+    initMap(
+      mapContainer,
+      app.querySelector<HTMLSpanElement>("#camera-readout"),
+    );
+  }
 }
 
 applyTheme(storedThemeChoice());
