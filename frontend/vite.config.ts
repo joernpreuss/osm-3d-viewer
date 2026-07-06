@@ -2,8 +2,13 @@ import { execSync } from "node:child_process";
 
 import { defineConfig } from "vite";
 
-/** Commit and build time, stamped into the page head to identify deploys. */
+/** Bump by hand for a new version line; the build number counts on its own. */
+const VERSION_BASE = "v0.1";
+
+/** Version, commit, and build time, stamped into the page head. */
 function buildInfo(): string {
+  // Deploy workflow run number; counts deploys, never resets.
+  const build = process.env.BUILD_NUMBER ?? "dev";
   let sha = "unknown";
   try {
     sha = execSync("git rev-parse --short HEAD", {
@@ -14,7 +19,7 @@ function buildInfo(): string {
   } catch {
     // not a git checkout (e.g. a source tarball) — keep "unknown"
   }
-  return `${sha} ${new Date().toISOString()}`;
+  return `${VERSION_BASE}.${build} ${sha} ${new Date().toISOString()}`;
 }
 
 // Relative base so the build works both at the domain root and under a
