@@ -11,6 +11,9 @@ Guidance for AI coding assistants working in this repository.
 
 ## Workflow rules
 
+- **Questions get answers, not code.** When the user asks a question
+  ("can we…?", "how…?"), answer it and propose options first; implement only
+  after an explicit go-ahead.
 - **Tests first.** For any behavior change, write a failing test and commit it
   before the implementation ("red" commit, then "green" commit).
 - **Commit style:** short imperative English sentences, sentence case, no
